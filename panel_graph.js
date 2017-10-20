@@ -33,6 +33,8 @@ $(document).ready(function() {
             });
         });
         var chart = new Highcharts.Chart( options );
+
+        $.fn.populateData(chart, 2);
     });
 });
 
@@ -147,17 +149,20 @@ $.fn.generateOptionsVar = function (slug, graphType, indicatorName, frequencyTyp
     return my_options;
 };
 
-$.fn.populateData = function(formula_id) {
+$.fn.populateData = function(chart, formula_id) {
     var my_data = [];
 
     $.getJSON(HOME + "/panel/ajax/datos", {
         formula_id: formula_id
     }, function (formula_values) {
         $.each(formula_values, function ( key, item ) {
-            console.log(key + ":" + item);
+            console.log(key + " : " + item);
             my_data.push(item);
         });
-        return my_data;
+        chart.addSeries({
+            name: "mentions",
+            data: my_data
+        });
     });
 };
 
