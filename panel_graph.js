@@ -1,7 +1,4 @@
 /**
- * Created by DGF on 20-10-2017.
- */
-/**
  * Created by DFZ on 18-10-2017.
  */
 $(document).ready(function() {
@@ -14,14 +11,26 @@ $(document).ready(function() {
         var graph_type = data[0].Graph;
         var indicator_name = data[0].Indicador;
         var frequency_type = data[0].Frequency;
+        // Agregamos <Div> donse se agregara la Grafica
+        $.fn.addDiv( slug );
 
+        // Generamos definicion del Grafico
         var options = $.fn.generateOptionsVar(slug, graph_type, indicator_name, frequency_type);
 
-
-        var my_data = $.fn.populateData();
-        options.series.push({
-            name: 'Nombre de Formula',
-            data: my_data
+        // Generamos data para el Grafico
+        // var series_data = $.fn.populateData();
+        var series_data = [];
+        $.getJSON(HOME + "/panel/ajax/datos", {
+            formula_id: 2
+        }, function (formula_values) {
+            $.each(formula_values, function ( key, item ) {
+                console.log(key + ":" + item);
+                series_data.push(item);
+            });
+            options.series.push({
+                name: 'Nombre de Formula',
+                data: series_data
+            });
         });
         var chart = new Highcharts.Chart( options );
     });
@@ -141,11 +150,14 @@ $.fn.generateOptionsVar = function (slug, graphType, indicatorName, frequencyTyp
 $.fn.populateData = function(formula_id) {
     var my_data = [];
 
-    $.getJSON(HOME + "/panel/ajax/values", {
+    $.getJSON(HOME + "/panel/ajax/datos", {
         formula_id: formula_id
     }, function (formula_values) {
-        console.log('LLENADO DE DATOS');
+        $.each(formula_values, function ( key, item ) {
+            console.log(key + ":" + item);
+            my_data.push(item);
+        });
+        return my_data;
     });
-
-    return my_data;
 };
+
