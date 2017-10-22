@@ -1,3 +1,9 @@
-function hello_world() {
-    console.log("Hi World!");
-}
+
+$(document).ready(function(){
+    $("button").click(function() {
+        var w = $("#width").val();
+        var h = $("#height").val();
+
+
+    });
+});
